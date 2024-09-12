@@ -1,6 +1,7 @@
 import { Router } from "express";
 import todoController from "../controller/todo-controller";
 import secureRoute from "../middleware/secureRoute";
+import sanitizeRoute from "../middleware/sanitizeRoute";
 
 const todoRouter = Router();
 
@@ -11,12 +12,20 @@ todoRouter.get("/", todoController.getAllTodoItems);
 todoRouter.get("/:todoId", todoController.getSingleTodoItem);
 
 // Create a new todo task
-todoRouter.post("/", secureRoute, todoController.createNewTodoItem);
+todoRouter.post("/", sanitizeRoute, secureRoute, todoController.createNewTodoItem);
 
 // Edit a todo task
-todoRouter.put("/:todoId", secureRoute, todoController.editTodoItem);
+todoRouter.put(
+  "/:todoId",
+  sanitizeRoute, secureRoute,
+  todoController.editTodoItem
+);
 
 // Delete a todo task
-todoRouter.delete("/:todoId", secureRoute, todoController.deleteTodoItem);
+todoRouter.delete(
+  "/:todoId",
+  sanitizeRoute, secureRoute,
+  todoController.deleteTodoItem
+);
 
 export default todoRouter;

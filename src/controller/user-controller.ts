@@ -37,9 +37,9 @@ const userController = {
           { expiresIn: "24h" }
         );
 
-        res.send(
-          `Login successful, welcome ${foundUser.username} \n token: ${token}`
-        );
+        res.json({
+          message: `Login successful, welcome ${foundUser.username} \n token: ${token}`,
+        });
       } else {
         throw {
           status: 401,
@@ -62,9 +62,9 @@ const userController = {
       checkValidEmail(req.body.email);
 
       const newUser = await User.create(req.body);
-      res
-        .status(201)
-        .send(`Sign up successful - Username: ${newUser.username}`);
+      res.status(201).json({
+        message: `Sign up successful - Username: ${newUser.username}`,
+      });
     } catch (e) {
       if (e instanceof Error) {
         throw { status: 400, message: e.message };

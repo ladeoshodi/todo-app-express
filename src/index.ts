@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-// import mongoSanitize from "express-mongo-sanitize";
 import todoRouter from "./router/todo-router";
 import userRouter from "./router/user-router";
 
@@ -27,8 +26,6 @@ const app = express();
 // Middlewares
 // ! To get POSTing to work, we need to add this line:
 app.use(express.json());
-// Sanitise user data
-// app.use(mongoSanitize());
 
 // route all api calls to the API router
 app.use("/api/todos", todoRouter);
