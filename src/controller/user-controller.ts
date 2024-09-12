@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User, validatePassword } from "../models/user-model";
 import * as EmailValidator from "email-validator";
+import jwt from "jsonwebtoken";
 
 const userController = {
   login: async (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +21,25 @@ const userController = {
       // compare password
       const isValidPw = validatePassword(incomingPassword, foundUser.password);
       if (isValidPw) {
-        res.send(`Login successful, welcome ${foundUser.username}`);
+        // issue unique jwt for the user
+        const JWT_SECRET = process.env.JWT_SECRET;
+
+        if (!JWT_SECRET) {
+          throw {
+            status: 500,
+            message: "JWT_SECRET is not defined in environment variables",
+          };
+        }
+
+        const token = jwt.sign(
+          { userId: foundUser._id, email: foundUser.email },
+          JWT_SECRET,
+          { expiresIn: "24h" }
+        );
+
+        res.send(
+          `Login successful, welcome ${foundUser.username} \n token: ${token}`
+        );
       } else {
         throw {
           status: 401,
