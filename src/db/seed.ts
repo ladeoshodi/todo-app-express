@@ -5,7 +5,17 @@ import { User } from "../models/user-model";
 
 dotenv.config();
 const DB_CONNECTION =
-  process.env.PROD_DB_CONNECTION || "mongodb://localhost:27017/todo-app";
+  process.env.NODE_ENV === "production"
+    ? process.env.DB_CONNECTION
+    : "mongodb://localhost:27017/todo-app";
+
+// check that DB_CONNECTION is not undefined
+if (!DB_CONNECTION) {
+  throw {
+    status: 500,
+    message: "DB_CONNECTION is not set",
+  };
+}
 
 // initial todo data
 const todoData = [

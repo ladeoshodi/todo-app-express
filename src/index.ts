@@ -9,7 +9,17 @@ import userRouter from "./router/user-router";
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const DB_CONNECTION =
-  process.env.DB_CONNECTION || "mongodb://localhost:27017/todo-app";
+  process.env.NODE_ENV === "production"
+    ? process.env.DB_CONNECTION
+    : "mongodb://localhost:27017/todo-app";
+
+// check that DB_CONNECTION is not undefined
+if (!DB_CONNECTION) {
+  throw {
+    status: 500,
+    message: "DB_CONNECTION is not set",
+  };
+}
 
 // create an instance of Express
 const app = express();
