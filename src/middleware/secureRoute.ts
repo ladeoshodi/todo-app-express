@@ -46,10 +46,11 @@ export default function secureRoute(
 
       // attach currentUser to all secure routes
       req.currentUser = user;
+
+      // call next() here so that it goes to the next middleware after the async callback function finishes verifying the JWT
+      next();
     } catch (e) {
       next(e);
     }
   });
-
-  next();
 }
