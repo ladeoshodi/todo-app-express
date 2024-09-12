@@ -23,10 +23,10 @@ app.use("/api/user", userRouter);
 
 // error handling
 app.use((e: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(e);
   if (e.status >= 400 && e.status <= 499) {
     res.status(e.status).json(e);
   } else {
+    console.error(e);
     res.status(500).send("An error occured, please try again later");
   }
 });

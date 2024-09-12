@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { User, validatePassword } from "../models/user-model";
+import * as EmailValidator from "email-validator";
 
 const userController = {
   login: async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +20,7 @@ const userController = {
       // compare password
       const isValidPw = validatePassword(incomingPassword, foundUser.password);
       if (isValidPw) {
-        res.send(`Login Successful, welcome ${foundUser.username}`);
+        res.send(`Login successful, welcome ${foundUser.username}`);
       } else {
         throw {
           status: 401,
@@ -36,8 +37,15 @@ const userController = {
   },
   signup: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // check that password is compliant
+      checkPasswordCompliance(req.body.password, req.body.passwordConfirmation);
+
+      checkValidEmail(req.body.email);
+
       const newUser = await User.create(req.body);
-      res.status(201).json(newUser);
+      res
+        .status(201)
+        .send(`Sign up successful - Username: ${newUser.username}`);
     } catch (e) {
       if (e instanceof Error) {
         throw { status: 400, message: e.message };
@@ -47,5 +55,55 @@ const userController = {
     }
   },
 };
+
+function checkPasswordCompliance(
+  password: string,
+  passwordConfirmation: string
+): void {
+  if (password !== passwordConfirmation) {
+    throw {
+      status: 400,
+      message: "Password mismatched, please check password and try again",
+    };
+  } else if (password.length < 8) {
+    throw {
+      status: 400,
+      message: "Password must have at least 8 characters",
+    };
+  } else if (
+    !Array.from(password).some((letter) => letter === letter.toUpperCase())
+  ) {
+    throw {
+      status: 400,
+      message: "Password must have at least 1 uppercase character",
+    };
+  } else if (
+    !Array.from(password).some((letter) => letter === letter.toLowerCase())
+  ) {
+    throw {
+      status: 400,
+      message: "Password must have at least 1 lowercase character",
+    };
+  } else if (!/[0-9]/.test(password)) {
+    throw {
+      status: 400,
+      message: "Password must have at least 1 number",
+    };
+  } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    throw {
+      status: 400,
+      message: "Password must have at least 1 special character",
+    };
+  }
+}
+
+function checkValidEmail(email: string): void {
+  if (!EmailValidator.validate(email)) {
+    throw {
+      status: 400,
+      message: "Invalid Email format",
+    };
+  }
+}
 
 export default userController;
