@@ -1,5 +1,5 @@
 import { Router } from "express";
-import userController from "../controller/user-controller";
+import userController from "../controllers/user-controller";
 import sanitizeRoute from "../middleware/sanitizeRoute";
 
 const userRouter = Router();

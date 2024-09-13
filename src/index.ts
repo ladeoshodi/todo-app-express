@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import todoRouter from "./router/todo-router";
-import userRouter from "./router/user-router";
+import todoRouter from "./routes/todo-routes";
+import userRouter from "./routes/user-routes";
 
 // enable use of .env variables
 dotenv.config();
