@@ -38,12 +38,13 @@ const userController = {
         );
 
         res.json({
-          message: `Login successful, welcome ${foundUser.username} \n token: ${token}`,
+          message: `Login successful, welcome ${foundUser.username}`,
+          token: token,
         });
       } else {
         throw {
           status: 401,
-          message: `Login failed. Bad password`,
+          message: `Login failed. Wrong password/username`,
         };
       }
     } catch (e) {

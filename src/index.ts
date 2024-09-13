@@ -33,6 +33,49 @@ app.use(express.json());
 app.use("/api/todos", todoRouter);
 app.use("/api/user", userRouter);
 
+// swagger doc definition
+const swaggerDefinition = {
+  openapi: "3.1.0",
+  info: {
+    title: "To-Do API with Swagger",
+    version: "1.0.0",
+    description:
+      "This is a simple CRUD API application made with Express and documented with Swagger",
+    license: {
+      name: "Licensed Under MIT",
+      url: "https://spdx.org/licenses/MIT.html",
+    },
+    contact: {
+      name: "Lade Oshodi",
+      url: "https://github.com/ladeoshodi",
+    },
+  },
+  components: {
+    securitySchemes: {
+      Authorization: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
+  security: [{ Authorization: [] }],
+  servers: [
+    { url: "http://localhost:3000/api", description: "Development server" },
+  ],
+};
+const options = {
+  swaggerDefinition,
+  apis: ["src/routes/*.ts"],
+};
+
+const specs = swaggerJSdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
+
 // error handling
 app.use((e: any, req: Request, res: Response, next: NextFunction) => {
   if (e.status >= 400 && e.status <= 499) {
@@ -42,8 +85,6 @@ app.use((e: any, req: Request, res: Response, next: NextFunction) => {
     res.status(500).send("An error occured, please try again later");
   }
 });
-
-// swagger doc options
 
 // Setup server
 async function start() {
