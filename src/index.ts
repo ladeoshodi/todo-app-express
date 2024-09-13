@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import todoRouter from "./routes/todo-routes";
 import userRouter from "./routes/user-routes";
+import swaggerJSdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 // enable use of .env variables
 dotenv.config();
@@ -24,7 +26,7 @@ if (!DB_CONNECTION) {
 const app = express();
 
 // Middlewares
-// ! To get POSTing to work, we need to add this line:
+// Allow for JSON in request body
 app.use(express.json());
 
 // route all api calls to the API router
@@ -40,6 +42,8 @@ app.use((e: any, req: Request, res: Response, next: NextFunction) => {
     res.status(500).send("An error occured, please try again later");
   }
 });
+
+// swagger doc options
 
 // Setup server
 async function start() {
