@@ -2,20 +2,22 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 // Make a Schema for the structure of the data
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: [true, "A username is required"],
-    unique: true,
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "A username is required"],
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: [true, "An email is required"],
+      unique: true,
+    },
+    password: { type: String, required: [true, "A password is required"] },
   },
-  email: {
-    type: String,
-    required: [true, "An email is required"],
-    unique: true,
-  },
-  password: { type: String, required: [true, "A password is required"] },
-  // Todo add created date and updated date
-});
+  { timestamps: true }
+);
 
 // hash passwords before mongoose model saves
 userSchema.pre("save", function (next) {
