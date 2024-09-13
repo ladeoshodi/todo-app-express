@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Todo from "../models/todo-model";
 
 const todoController = {
-  getAllTodoItems: async (req: Request, res: Response) => {
+  async getAllTodoItems(req: Request, res: Response) {
     const todoItems = await Todo.find({}).sort({
       isCompleted: -1,
       priority: 1,
@@ -11,11 +11,7 @@ const todoController = {
     });
     res.json(todoItems);
   },
-  getSingleTodoItem: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  async getSingleTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { todoId } = req.params;
       const todoItem = await Todo.findById(todoId);
@@ -31,11 +27,7 @@ const todoController = {
       }
     }
   },
-  createNewTodoItem: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  async createNewTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
       const newItem = await Todo.create(req.body);
       res.status(201).json(newItem);
@@ -47,7 +39,7 @@ const todoController = {
       }
     }
   },
-  editTodoItem: async (req: Request, res: Response, next: NextFunction) => {
+  async editTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { todoId } = req.params;
       const updatedData = req.body;
@@ -69,7 +61,7 @@ const todoController = {
       }
     }
   },
-  deleteTodoItem: async (req: Request, res: Response, next: NextFunction) => {
+  async deleteTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { todoId } = req.params;
       const deletedItem = await Todo.findByIdAndDelete(todoId);

@@ -4,7 +4,7 @@ import * as EmailValidator from "email-validator";
 import jwt from "jsonwebtoken";
 
 const userController = {
-  login: async (req: Request, res: Response, next: NextFunction) => {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const incomingData = req.body;
       const incomingPassword = req.body.password;
@@ -54,7 +54,7 @@ const userController = {
       }
     }
   },
-  signup: async (req: Request, res: Response, next: NextFunction) => {
+  async signup(req: Request, res: Response, next: NextFunction) {
     try {
       // check that password is compliant
       checkPasswordCompliance(req.body.password, req.body.passwordConfirmation);
