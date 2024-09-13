@@ -17,26 +17,12 @@ if (!DB_CONNECTION) {
   };
 }
 
-// initial todo data
-const todoData = [
-  { name: "Finish lab exercise", priority: "high", isCompleted: false },
-  { name: "Handle GET requests", priority: "high", isCompleted: false },
-  { name: "Handle POST requests", priority: "high", isCompleted: false },
-];
-
 //initial user data
-const userData = [
-  {
-    username: "ladetest1",
-    email: "ladetest1@email.com",
-    password: "testpassword",
-  },
-  {
-    username: "ladetest2",
-    email: "ladetest2@email.com",
-    password: "testpassword",
-  },
-];
+const adminUser = {
+  username: "adminuser",
+  email: "admin@email.com",
+  password: "admin",
+};
 
 // ! This is a program to put data into the database.
 async function seed() {
@@ -45,12 +31,25 @@ async function seed() {
 
   // delete all existing data
   console.log("Wiping database clean");
-  await Todo.deleteMany({});
   await User.deleteMany({});
+  await Todo.deleteMany({});
 
   console.log("Adding initial data");
+  const user = await User.create(adminUser);
+
+  // initial todo data
+  const todoData = [
+    { name: "Finish lab exercise", priority: "high", isCompleted: false, user },
+    { name: "Handle GET requests", priority: "high", isCompleted: false, user },
+    {
+      name: "Handle POST requests",
+      priority: "high",
+      isCompleted: false,
+      user,
+    },
+  ];
+
   await Todo.create(todoData);
-  await User.create(userData);
 
   await mongoose.disconnect();
   console.log("Disconnected from the database... bye bye");
