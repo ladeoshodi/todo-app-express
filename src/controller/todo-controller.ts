@@ -29,6 +29,7 @@ const todoController = {
   },
   async createNewTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
+      req.body.user = req.currentUser._id;
       const newItem = await Todo.create(req.body);
       res.status(201).json(newItem);
     } catch (e) {
