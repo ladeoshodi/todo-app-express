@@ -78,13 +78,26 @@ const todoController = {
   async deleteTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { todoId } = req.params;
-      const deletedItem = await Todo.findByIdAndDelete(todoId);
-      if (!deletedItem) {
+
+      // get the owner of the todo item
+      const itemToDelete = await Todo.findById(todoId);
+      if (!itemToDelete) {
         throw {
           status: 404,
           message: `No todo item with id: ${todoId} found to delete`,
         };
       }
+
+      // check that the logged in user owns the document to delete
+      if (!req.currentUser._id.equals(itemToDelete.user)) {
+        throw {
+          status: 401,
+          message: `Unauthorised: you must own the item to be able to delete it`,
+        };
+      }
+
+      await Todo.findByIdAndDelete(todoId);
+
       res.status(204).send("deleted");
     } catch (e) {
       if (e instanceof Error) {
