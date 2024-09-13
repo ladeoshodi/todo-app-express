@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   password: { type: String, required: [true, "A password is required"] },
+  // Todo add created date and updated date
 });
 
 // hash passwords before mongoose model saves

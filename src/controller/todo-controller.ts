@@ -44,15 +44,28 @@ const todoController = {
     try {
       const { todoId } = req.params;
       const updatedData = req.body;
-      const updatedItem = await Todo.findByIdAndUpdate(todoId, updatedData, {
-        new: true,
-      });
-      if (!updatedItem) {
+
+      // get the owner of the todo item
+      const itemToUpdate = await Todo.findById(todoId);
+      if (!itemToUpdate) {
         throw {
           status: 404,
           message: `No todo item with id: ${todoId} found to update`,
         };
       }
+
+      // check that the logged in user owns the document to update
+      if (!req.currentUser._id.equals(itemToUpdate.user)) {
+        throw {
+          status: 401,
+          message: `Unauthorised: you must own the item to be able to update it`,
+        };
+      }
+
+      const updatedItem = await Todo.findByIdAndUpdate(todoId, updatedData, {
+        new: true,
+      });
+
       res.status(200).json(updatedItem);
     } catch (e) {
       if (e instanceof Error) {
