@@ -9,4 +9,10 @@ const todoSchema = new mongoose.Schema({
 
 const Todo = mongoose.model("Todo", todoSchema);
 
+async function initialiseDBIndex() {
+  await Todo.init();
+}
+
+initialiseDBIndex();
+
 export default Todo;

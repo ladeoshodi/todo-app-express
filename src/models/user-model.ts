@@ -33,4 +33,10 @@ function validatePassword(
 
 const User = mongoose.model("User", userSchema);
 
+async function initialiseDBIndex() {
+  await User.init();
+}
+
+initialiseDBIndex();
+
 export { User, validatePassword };
