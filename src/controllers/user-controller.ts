@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { User, validatePassword } from "../models/user-model";
-import * as EmailValidator from "email-validator";
 import jwt from "jsonwebtoken";
 
 const userController = {
@@ -60,8 +59,6 @@ const userController = {
       // check that password is compliant
       checkPasswordCompliance(req.body.password, req.body.passwordConfirmation);
 
-      checkValidEmail(req.body.email);
-
       const newUser = await User.create(req.body);
       res.status(201).json({
         message: `Sign up successful - Username: ${newUser.username}`,
@@ -113,15 +110,6 @@ function checkPasswordCompliance(
     throw {
       status: 400,
       message: "Password must have at least 1 special character",
-    };
-  }
-}
-
-function checkValidEmail(email: string): void {
-  if (!EmailValidator.validate(email)) {
-    throw {
-      status: 400,
-      message: "Invalid Email format",
     };
   }
 }
