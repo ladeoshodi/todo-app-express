@@ -5,6 +5,32 @@ import sanitizeRoute from "../middleware/sanitizeRoute";
 
 const todoRouter = Router();
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Todo:
+ *       type: object
+ *       required:
+ *         - name
+ *         - user
+ *       properties:
+ *          name:
+ *            type: string
+ *            description: Name of Todo task
+ *          priority:
+ *            type: integer
+ *            description: Priority of the task
+ *            enum: [1, 2, 3]
+ *          isCompleted:
+ *            type: boolean
+ *            description: Indicate if task is completed or not
+ *            default: false
+ *          user:
+ *             type: string
+ *             description: Ref to a User
+ */
+
 // GET all todos
 todoRouter.get("/", todoController.getAllTodoItems);
 
