@@ -19,7 +19,30 @@ const userSchema = new mongoose.Schema(
         message: "Invalid Email format",
       },
     },
-    password: { type: String, required: [true, "A password is required"] },
+    password: {
+      type: String,
+      required: [true, "A password is required"],
+      minLength: [8, "Password must have at least 8 characters"],
+      validate: [
+        {
+          validator: (password: string) => /[A-Z]/.test(password),
+          message: "Password must have at least 1 uppercase character",
+        },
+        {
+          validator: (password: string) => /[a-z]/.test(password),
+          message: "Password must have at least 1 lowercase character",
+        },
+        {
+          validator: (password: string) => /[0-9]/.test(password),
+          message: "Password must have at least 1 number",
+        },
+        {
+          validator: (password: string) =>
+            /[!@#$%^&*(),.?":{}|<>]/.test(password),
+          message: "Password must have at least 1 special character",
+        },
+      ],
+    },
   },
   { timestamps: true }
 );

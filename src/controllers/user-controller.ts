@@ -56,9 +56,12 @@ const userController = {
   },
   async signup(req: Request, res: Response, next: NextFunction) {
     try {
-      // check that password is compliant
-      checkPasswordCompliance(req.body.password, req.body.passwordConfirmation);
-
+      if (req.body.password !== req.body.passwordConfirmation) {
+        throw {
+          status: 400,
+          message: "Password mismatched, please check password and try again",
+        };
+      }
       const newUser = await User.create(req.body);
       res.status(201).json({
         message: `Sign up successful - Username: ${newUser.username}`,
@@ -72,46 +75,5 @@ const userController = {
     }
   },
 };
-
-function checkPasswordCompliance(
-  password: string,
-  passwordConfirmation: string
-): void {
-  if (password !== passwordConfirmation) {
-    throw {
-      status: 400,
-      message: "Password mismatched, please check password and try again",
-    };
-  } else if (password.length < 8) {
-    throw {
-      status: 400,
-      message: "Password must have at least 8 characters",
-    };
-  } else if (
-    !Array.from(password).some((letter) => letter === letter.toUpperCase())
-  ) {
-    throw {
-      status: 400,
-      message: "Password must have at least 1 uppercase character",
-    };
-  } else if (
-    !Array.from(password).some((letter) => letter === letter.toLowerCase())
-  ) {
-    throw {
-      status: 400,
-      message: "Password must have at least 1 lowercase character",
-    };
-  } else if (!/[0-9]/.test(password)) {
-    throw {
-      status: 400,
-      message: "Password must have at least 1 number",
-    };
-  } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    throw {
-      status: 400,
-      message: "Password must have at least 1 special character",
-    };
-  }
-}
 
 export default userController;
