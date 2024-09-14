@@ -20,7 +20,7 @@ const todoRouter = Router();
  *            description: Name of Todo task
  *          priority:
  *            type: integer
- *            description: Priority of the task
+ *            description: Priority of the task (1 = low, 2 = medium, 3 = high)
  *            enum: [1, 2, 3]
  *          isCompleted:
  *            type: boolean

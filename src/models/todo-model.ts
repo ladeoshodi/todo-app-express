@@ -5,7 +5,15 @@ import mongoose from "mongoose";
 const todoSchema = new mongoose.Schema(
   {
     name: { type: String, required: [true, "A Todo Item name is required"] },
-    priority: String,
+    priority: {
+      type: Number,
+      enum: {
+        values: [1, 2, 3],
+        message:
+          "Must be set to either 1, 2 or 3 equivalent to low, medium or high",
+      },
+      default: 1,
+    },
     isCompleted: { type: Boolean, default: false },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
