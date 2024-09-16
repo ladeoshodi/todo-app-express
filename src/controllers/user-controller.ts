@@ -9,8 +9,10 @@ const userController = {
       const incomingPassword = req.body.password;
       const incomingEmail = req.body.email;
 
-      // check if usr exists
-      const foundUser = await User.findOne({ email: incomingEmail });
+      // check if user exists
+      const foundUser = await User.findOne({ email: incomingEmail }).select(
+        "+password"
+      );
       if (!foundUser) {
         throw {
           status: 404,

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Task from "../models/task-model";
+import { User } from "../models/user-model";
 
 const taskController = {
   async getAllTasks(req: Request, res: Response) {
@@ -34,6 +35,9 @@ const taskController = {
     try {
       req.body.owner = req.currentUser._id;
       const newTask = await Task.create(req.body);
+      await User.findByIdAndUpdate(req.currentUser._id, {
+        $push: { tasks: newTask },
+      });
       res.status(201).json(newTask);
     } catch (e) {
       if (e instanceof Error) {
@@ -48,7 +52,7 @@ const taskController = {
       const { id } = req.params;
       const updatedData = req.body;
 
-      // get the owner of the task item
+      // get the task to update
       const taskToUpdate = await Task.findById(id);
       if (!taskToUpdate) {
         throw {
@@ -67,6 +71,14 @@ const taskController = {
         })
           .populate("owner")
           .populate("collaborators");
+
+        if (updatedData.collaborators) {
+          updatedData.collaborators.forEach(async (collaborator: string) => {
+            await User.findByIdAndUpdate(collaborator, {
+              $push: { tasks: updatedTask },
+            });
+          });
+        }
 
         res.status(200).json(updatedTask);
       } else {
