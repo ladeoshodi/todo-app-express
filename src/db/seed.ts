@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Todo from "../models/todo-model";
+import Task from "../models/task-model";
 import { User } from "../models/user-model";
 
 dotenv.config();
@@ -18,11 +18,23 @@ if (!DB_CONNECTION) {
 }
 
 //initial user data
-const adminUser = {
-  username: "adminuser",
-  email: "admin@email.com",
-  password: "#Adm1n123",
-};
+const userData = [
+  {
+    username: "adminuser",
+    email: "admin@admin.com",
+    password: "#Adm1n123",
+  },
+  {
+    username: "ladetest1",
+    email: "ladetest1@example.com",
+    password: "#Passw0rd",
+  },
+  {
+    username: "ladetest2",
+    email: "ladetest2@example.com",
+    password: "#Passw0rd",
+  },
+];
 
 // ! This is a program to put data into the database.
 async function seed() {
@@ -32,24 +44,38 @@ async function seed() {
   // delete all existing data
   console.log("Wiping database clean");
   await User.deleteMany({});
-  await Todo.deleteMany({});
+  await Task.deleteMany({});
 
   console.log("Adding initial data");
-  const owner = await User.create(adminUser);
+  const users = await User.create(userData);
 
   // initial todo data
-  const todoData = [
-    { name: "Finish lab exercise", priority: 3, isCompleted: false, owner },
-    { name: "Handle GET requests", priority: 2, isCompleted: false, owner },
+  const taskData = [
+    {
+      name: "Finish lab exercise",
+      priority: "P1",
+      isCompleted: false,
+      status: "todo",
+      owner: users[0],
+    },
+    {
+      name: "Handle GET requests",
+      priority: "P3",
+      isCompleted: false,
+      status: "done",
+      owner: users[0],
+      collaborators: [users[1], users[2]],
+    },
     {
       name: "Handle POST requests",
-      priority: 1,
+      priority: "P3",
       isCompleted: false,
-      owner,
+      status: "in progress",
+      owner: users[0],
     },
   ];
 
-  await Todo.create(todoData);
+  await Task.create(taskData);
 
   await mongoose.disconnect();
   console.log("Disconnected from the database... bye bye");

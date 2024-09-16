@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import todoRouter from "./routes/todo-routes";
+import taskRouter from "./routes/task-routes";
 import userRouter from "./routes/user-routes";
 import swaggerJSdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -30,7 +30,7 @@ const app = express();
 app.use(express.json());
 
 // route all api calls to the API router
-app.use("/api/todos", todoRouter);
+app.use("/api/tasks", taskRouter);
 app.use("/api/user", userRouter);
 
 // swagger doc definition

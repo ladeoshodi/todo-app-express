@@ -39,11 +39,6 @@ const userRouter = Router();
  *                 type: string
  *                 description: Password of the user (must be a alpha-numeric value with at least one special character and have a min length of 8 characters)
  *               passwordConfirmation: same as password
- *             example:
- *               username: johndoe
- *               email: johndoe@example.com
- *               password: A very secure password
- *               passwordConfirmation: A very secure password
  *     responses:
  *       200:
  *         description: The created user
@@ -78,9 +73,6 @@ userRouter.post("/signup", sanitizeRoute, userController.signup);
  *              password:
  *                type: string
  *                description: Password of user
- *            example:
- *              email: johndoe@example.com
- *              password: A very secure password
  *     responses:
  *       200:
  *         description: The logged in user
