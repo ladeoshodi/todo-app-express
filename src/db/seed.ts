@@ -46,7 +46,7 @@ async function seed() {
   await User.deleteMany({});
   await Task.deleteMany({});
 
-  console.log("Adding initial data");
+  console.log("Creating users in the db");
   const users = await User.create(userData);
 
   // initial todo data
@@ -71,11 +71,19 @@ async function seed() {
       priority: "P3",
       isCompleted: false,
       status: "in progress",
-      owner: users[0],
+      owner: users[1],
     },
   ];
 
+  console.log("Creating tasks in the db");
   await Task.create(taskData);
+  // get the tasks where the admin is the owner
+  console.log("Getting tasks where admin is the owner");
+  const adminTasks = await Task.find({ owner: users[0] });
+
+  // update the user with the tasks
+  console.log("Associating admin user model with admin tasks in the db");
+  await User.findByIdAndUpdate(users[0]._id, { tasks: adminTasks });
 
   await mongoose.disconnect();
   console.log("Disconnected from the database... bye bye");
