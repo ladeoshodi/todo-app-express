@@ -28,7 +28,13 @@ const taskSchema = new mongoose.Schema(
       default: "P3",
     },
     isCompleted: { type: Boolean, default: false },
-    collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    collaborators: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        set: (v: string) => (v === "" ? null : v),
+      },
+    ],
   },
   { timestamps: true }
 );

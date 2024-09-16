@@ -57,21 +57,24 @@ const taskController = {
         };
       }
 
-      // check that the logged in user owns the task to update
-      if (!req.currentUser._id.equals(taskToUpdate.owner)) {
+      // check that the logged in user owns or is a collaborator on the task to update
+      if (
+        req.currentUser._id.equals(taskToUpdate.owner) ||
+        taskToUpdate.collaborators.includes(req.currentUser._id)
+      ) {
+        const updatedTask = await Task.findByIdAndUpdate(id, updatedData, {
+          new: true,
+        })
+          .populate("owner")
+          .populate("collaborators");
+
+        res.status(200).json(updatedTask);
+      } else {
         throw {
           status: 401,
-          message: `Unauthorised: you must own the task to be able to update it`,
+          message: `Unauthorised: you must own or be a collaborator on the task to update it`,
         };
       }
-
-      const updatedTask = await Task.findByIdAndUpdate(id, updatedData, {
-        new: true,
-      })
-        .populate("owner")
-        .populate("collaborators");
-
-      res.status(200).json(updatedTask);
     } catch (e) {
       if (e instanceof Error) {
         throw { status: 400, message: e.message };
