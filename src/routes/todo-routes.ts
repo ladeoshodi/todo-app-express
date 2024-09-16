@@ -13,7 +13,7 @@ const todoRouter = Router();
  *       type: object
  *       required:
  *         - name
- *         - user
+ *         - owner
  *       properties:
  *          name:
  *            type: string
