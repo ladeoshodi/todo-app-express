@@ -29,7 +29,7 @@ const todoController = {
   },
   async createNewTodoItem(req: Request, res: Response, next: NextFunction) {
     try {
-      req.body.user = req.currentUser._id;
+      req.body.owner = req.currentUser._id;
       const newItem = await Todo.create(req.body);
       res.status(201).json(newItem);
     } catch (e) {
@@ -55,7 +55,7 @@ const todoController = {
       }
 
       // check that the logged in user owns the document to update
-      if (!req.currentUser._id.equals(itemToUpdate.user)) {
+      if (!req.currentUser._id.equals(itemToUpdate.owner)) {
         throw {
           status: 401,
           message: `Unauthorised: you must own the item to be able to update it`,
@@ -89,7 +89,7 @@ const todoController = {
       }
 
       // check that the logged in user owns the document to delete
-      if (!req.currentUser._id.equals(itemToDelete.user)) {
+      if (!req.currentUser._id.equals(itemToDelete.owner)) {
         throw {
           status: 401,
           message: `Unauthorised: you must own the item to be able to delete it`,

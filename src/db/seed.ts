@@ -21,7 +21,7 @@ if (!DB_CONNECTION) {
 const adminUser = {
   username: "adminuser",
   email: "admin@email.com",
-  password: "admin",
+  password: "#Adm1n123",
 };
 
 // ! This is a program to put data into the database.
@@ -35,17 +35,17 @@ async function seed() {
   await Todo.deleteMany({});
 
   console.log("Adding initial data");
-  const user = await User.create(adminUser);
+  const owner = await User.create(adminUser);
 
   // initial todo data
   const todoData = [
-    { name: "Finish lab exercise", priority: "high", isCompleted: false, user },
-    { name: "Handle GET requests", priority: "high", isCompleted: false, user },
+    { name: "Finish lab exercise", priority: 3, isCompleted: false, owner },
+    { name: "Handle GET requests", priority: 2, isCompleted: false, owner },
     {
       name: "Handle POST requests",
-      priority: "high",
+      priority: 1,
       isCompleted: false,
-      user,
+      owner,
     },
   ];
 

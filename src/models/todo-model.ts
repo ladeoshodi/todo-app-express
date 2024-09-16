@@ -15,7 +15,11 @@ const todoSchema = new mongoose.Schema(
       default: 1,
     },
     isCompleted: { type: Boolean, default: false },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    }, // owner of the document
   },
   { timestamps: true }
 );
