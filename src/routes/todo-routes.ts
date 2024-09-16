@@ -26,7 +26,7 @@ const todoRouter = Router();
  *            type: boolean
  *            description: Indicate if task is completed or not
  *            default: false
- *          user:
+ *          owner:
  *             type: string
  *             description: Ref to a User
  */
