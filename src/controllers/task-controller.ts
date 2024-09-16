@@ -3,18 +3,21 @@ import Task from "../models/task-model";
 
 const taskController = {
   async getAllTasks(req: Request, res: Response) {
-    const tasks = await Task.find({}).sort({
-      isCompleted: -1,
-      priority: 1,
-      name: 1,
-      _id: 1,
-    });
+    const tasks = await Task.find({})
+      .sort({
+        status: 1,
+        priority: 1,
+      })
+      .populate("owner")
+      .populate("collaborators");
     res.json(tasks);
   },
   async getSingleTask(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const task = await Task.findById(id);
+      const task = await Task.findById(id)
+        .populate("owner")
+        .populate("collaborators");
       if (!task) {
         throw { status: 404, message: `No task with id: ${id} found` };
       }
@@ -64,7 +67,9 @@ const taskController = {
 
       const updatedTask = await Task.findByIdAndUpdate(id, updatedData, {
         new: true,
-      });
+      })
+        .populate("owner")
+        .populate("collaborators");
 
       res.status(200).json(updatedTask);
     } catch (e) {
@@ -98,7 +103,7 @@ const taskController = {
 
       await Task.findByIdAndDelete(id);
 
-      res.status(204).send("deleted");
+      res.status(204).end();
     } catch (e) {
       if (e instanceof Error) {
         throw { status: 400, message: e.message };
