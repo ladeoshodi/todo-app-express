@@ -1,5 +1,6 @@
 import { Router } from "express";
 import taskController from "../controllers/task-controller";
+import subtaskController from "../controllers/subtask-controller";
 import secureRoute from "../middleware/secureRoute";
 import sanitizeRoute from "../middleware/sanitizeRoute";
 
@@ -169,6 +170,14 @@ taskRouter.delete(
   sanitizeRoute,
   secureRoute,
   taskController.deleteTask
+);
+
+// subtasks routes
+taskRouter.post(
+  "/:id/subtasks",
+  sanitizeRoute,
+  secureRoute,
+  subtaskController.createNewSubTask
 );
 
 export default taskRouter;
