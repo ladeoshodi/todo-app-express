@@ -26,6 +26,40 @@ const subtaskController = {
       };
     }
   },
+  async editSubTask(req: Request, res: Response) {
+    const { taskId, subtaskId } = req.params;
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      throw {
+        status: 404,
+        message: "Task not found",
+      };
+    }
+
+    const subtask = task.subtasks.id(subtaskId);
+    if (!subtask) {
+      throw {
+        status: 404,
+        message: "Subtask not found",
+      };
+    }
+
+    if (
+      req.currentUser._id.equals(task.owner) ||
+      task.collaborators.includes(req.currentUser._id)
+    ) {
+      subtask.set(req.body);
+      const updatedTask = await task.save();
+      res.status(200).json(updatedTask);
+    } else {
+      throw {
+        status: 401,
+        message:
+          "Unauthorised: you must either own or be a collaborator on the task to update it",
+      };
+    }
+  },
 };
 
 export default subtaskController;

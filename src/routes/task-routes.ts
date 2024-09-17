@@ -180,4 +180,11 @@ taskRouter.post(
   subtaskController.createNewSubTask
 );
 
+taskRouter.put(
+  "/:taskId/subtasks/:subtaskId",
+  sanitizeRoute,
+  secureRoute,
+  subtaskController.editSubTask
+);
+
 export default taskRouter;
