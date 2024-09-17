@@ -187,4 +187,11 @@ taskRouter.put(
   subtaskController.editSubTask
 );
 
+taskRouter.delete(
+  "/:taskId/subtasks/:subtaskId",
+  sanitizeRoute,
+  secureRoute,
+  subtaskController.deleteSubtask
+);
+
 export default taskRouter;
