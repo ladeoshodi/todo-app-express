@@ -92,7 +92,7 @@ taskRouter.get("/", taskController.getAllTasks);
  *               $ref: "#/components/schemas/Task"
  */
 // GET a single task
-taskRouter.get("/:id", taskController.getSingleTask);
+taskRouter.get("/:taskId", taskController.getSingleTask);
 
 /**
  * @swagger
@@ -145,7 +145,7 @@ taskRouter.post("/", sanitizeRoute, secureRoute, taskController.createNewTask);
  *               $ref: "#/components/schemas/Task"
  */
 // Edit a task
-taskRouter.put("/:id", sanitizeRoute, secureRoute, taskController.editTask);
+taskRouter.put("/:taskId", sanitizeRoute, secureRoute, taskController.editTask);
 
 /**
  * @swagger
@@ -166,7 +166,7 @@ taskRouter.put("/:id", sanitizeRoute, secureRoute, taskController.editTask);
  */
 // Delete a task
 taskRouter.delete(
-  "/:id",
+  "/:taskId",
   sanitizeRoute,
   secureRoute,
   taskController.deleteTask
@@ -174,7 +174,7 @@ taskRouter.delete(
 
 // subtasks routes
 taskRouter.post(
-  "/:id/subtasks",
+  "/:taskId/subtasks",
   sanitizeRoute,
   secureRoute,
   subtaskController.createNewSubTask

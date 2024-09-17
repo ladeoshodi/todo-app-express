@@ -15,12 +15,12 @@ const taskController = {
   },
   async getSingleTask(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const task = await Task.findById(id)
+      const { taskId } = req.params;
+      const task = await Task.findById(taskId)
         .populate("owner")
         .populate("collaborators");
       if (!task) {
-        throw { status: 404, message: `No task with id: ${id} found` };
+        throw { status: 404, message: `No task with id: ${taskId} found` };
       }
       res.json(task);
     } catch (e) {
@@ -49,15 +49,15 @@ const taskController = {
   },
   async editTask(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const { taskId } = req.params;
       const updatedData = req.body;
 
       // get the task to update
-      const taskToUpdate = await Task.findById(id);
+      const taskToUpdate = await Task.findById(taskId);
       if (!taskToUpdate) {
         throw {
           status: 404,
-          message: `No task with id: ${id} found to update`,
+          message: `No task with id: ${taskId} found to update`,
         };
       }
 
@@ -66,7 +66,7 @@ const taskController = {
         req.currentUser._id.equals(taskToUpdate.owner) ||
         taskToUpdate.collaborators.includes(req.currentUser._id)
       ) {
-        const updatedTask = await Task.findByIdAndUpdate(id, updatedData, {
+        const updatedTask = await Task.findByIdAndUpdate(taskId, updatedData, {
           new: true,
         })
           .populate("owner")
@@ -97,14 +97,14 @@ const taskController = {
   },
   async deleteTask(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const { taskId } = req.params;
 
       // get the owner of the task item
-      const taskToDelete = await Task.findById(id);
+      const taskToDelete = await Task.findById(taskId);
       if (!taskToDelete) {
         throw {
           status: 404,
-          message: `No task with id: ${id} found to delete`,
+          message: `No task with id: ${taskId} found to delete`,
         };
       }
 
@@ -116,7 +116,7 @@ const taskController = {
         };
       }
 
-      await Task.findByIdAndDelete(id);
+      await Task.findByIdAndDelete(taskId);
 
       res.status(204).end();
     } catch (e) {

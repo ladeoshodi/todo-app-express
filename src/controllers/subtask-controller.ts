@@ -3,7 +3,7 @@ import Task from "../models/task-model";
 
 const subtaskController = {
   async createNewSubTask(req: Request, res: Response) {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findById(req.params.taskId);
 
     if (!task) {
       throw {
