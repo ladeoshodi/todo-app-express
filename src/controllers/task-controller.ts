@@ -73,11 +73,11 @@ const taskController = {
           .populate("collaborators");
 
         if (updatedData.collaborators) {
-          updatedData.collaborators.forEach(async (collaborator: string) => {
+          for (const collaborator of updatedData.collaborators) {
             await User.findByIdAndUpdate(collaborator, {
               $push: { tasks: updatedTask },
             });
-          });
+          }
         }
 
         res.status(200).json(updatedTask);

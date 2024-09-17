@@ -77,13 +77,22 @@ async function seed() {
 
   console.log("Creating tasks in the db");
   await Task.create(taskData);
-  // get the tasks where the admin is the owner
-  console.log("Getting tasks where admin is the owner");
-  const adminTasks = await Task.find({ owner: users[0] });
 
   // update the user with the tasks
-  console.log("Associating admin user model with admin tasks in the db");
+  console.log("Associating Tasks to Users");
+  const adminTasks = await Task.find({ owner: users[0] });
   await User.findByIdAndUpdate(users[0]._id, { tasks: adminTasks });
+  const sharedTasks = await Task.find({
+    collaborators: { $exists: true, $ne: [] },
+  });
+
+  for (const task of sharedTasks) {
+    for (const collaborator of task.collaborators) {
+      await User.findByIdAndUpdate(collaborator, {
+        $push: { tasks: task },
+      });
+    }
+  }
 
   await mongoose.disconnect();
   console.log("Disconnected from the database... bye bye");
