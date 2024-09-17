@@ -57,6 +57,15 @@ async function seed() {
       isCompleted: false,
       status: "todo",
       owner: users[0],
+      subtasks: [
+        {
+          name: "Handle router requests (GET, POST, PUT, DELETE)",
+        },
+        {
+          name: "Update seed.ts file",
+          isCompleted: true,
+        },
+      ],
     },
     {
       name: "Handle GET requests",
