@@ -42,6 +42,23 @@ const taskRouter = Router();
  *            description: Ref to multiple Users
  *            items:
  *              type: string
+ *          subtasks:
+ *            type: array
+ *            description: List of subtasks for a task
+ *            items:
+ *              $ref: "#/components/schemas/Subtask"
+ *     Subtask:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Name of Task
+ *         isCompleted:
+ *           type: boolean
+ *           description: Indicate if task has been completed or not
+ *           default: false
  */
 
 /**
@@ -72,13 +89,13 @@ taskRouter.get("/", taskController.getAllTasks);
 
 /**
  * @swagger
- * /tasks/{id}:
+ * /tasks/{taskId}:
  *   get:
  *     summary: List a single task
  *     tags: [Task]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: taskId
  *         schema:
  *           type: string
  *         required: true
@@ -119,13 +136,13 @@ taskRouter.post("/", sanitizeRoute, secureRoute, taskController.createNewTask);
 
 /**
  * @swagger
- * /tasks/{id}:
+ * /tasks/{taskId}:
  *   put:
  *     summary: Update a task
  *     tags: [Task]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: taskId
  *         schema:
  *           type: string
  *         required: true
@@ -149,13 +166,13 @@ taskRouter.put("/:taskId", sanitizeRoute, secureRoute, taskController.editTask);
 
 /**
  * @swagger
- * /tasks/{id}:
+ * /tasks/{taskId}:
  *   delete:
  *     summary: Delete a task
  *     tags: [Task]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: taskId
  *         schema:
  *           type: string
  *         required: true
@@ -173,6 +190,34 @@ taskRouter.delete(
 );
 
 // subtasks routes
+/**
+ * @swagger
+ * /tasks/{taskId}/subtasks:
+ *   post:
+ *     summary: Create a new subtask
+ *     tags: [Task]
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The task Id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Subtask"
+ *     responses:
+ *       201:
+ *         description: A created subtask
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Task"
+ */
+
 taskRouter.post(
   "/:taskId/subtasks",
   sanitizeRoute,
@@ -180,6 +225,39 @@ taskRouter.post(
   subtaskController.createNewSubTask
 );
 
+/**
+ * @swagger
+ * /tasks/{taskId}/subtasks/{subtaskId}:
+ *   put:
+ *     summary: Edit a subtask
+ *     tags: [Task]
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The task Id
+ *       - in: path
+ *         name: subtaskId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The subtask Id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Subtask"
+ *     responses:
+ *       201:
+ *         description: A created subtask
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Task"
+ */
 taskRouter.put(
   "/:taskId/subtasks/:subtaskId",
   sanitizeRoute,
@@ -187,6 +265,29 @@ taskRouter.put(
   subtaskController.editSubTask
 );
 
+/**
+ * @swagger
+ * /tasks/{taskId}/subtasks/{subtaskId}:
+ *   delete:
+ *     summary: Delete a subtask
+ *     tags: [Task]
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The task Id
+ *       - in: path
+ *         name: subtaskId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The subtask Id
+ *     responses:
+ *       204:
+ *         description: No content
+ */
 taskRouter.delete(
   "/:taskId/subtasks/:subtaskId",
   sanitizeRoute,
