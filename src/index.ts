@@ -5,6 +5,7 @@ import taskRouter from "./routes/task-routes";
 import userRouter from "./routes/user-routes";
 import swaggerJSdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 // enable use of .env variables
 dotenv.config();
@@ -26,6 +27,8 @@ if (!DB_CONNECTION) {
 const app = express();
 
 // Middlewares
+app.use(cors());
+
 // Allow for JSON in request body
 app.use(express.json());
 
