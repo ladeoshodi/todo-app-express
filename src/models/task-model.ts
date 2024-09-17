@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+// subtask schema
+const subtask = new mongoose.Schema(
+  {
+    name: { type: String, required: [true, "A Subtask name is needed"] },
+    isCompleted: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
 // Make a Schema for the structure of the data
 const taskSchema = new mongoose.Schema(
   {
@@ -35,6 +44,7 @@ const taskSchema = new mongoose.Schema(
         set: (v: string) => (v === "" ? null : v),
       },
     ],
+    subtasks: [subtask],
   },
   { timestamps: true }
 );
